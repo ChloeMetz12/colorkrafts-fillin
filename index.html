@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="ColorKrafts Fill-In" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>ColorKrafts for Kids — Fill-In Form</title>
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --muted: #5c5c5c;
+      --paper: #fffdf8;
+      --card: #ffffff;
+      --accent: #e85d04;
+      --accent-soft: #fff0e6;
+      --line: #e8e0d4;
+      --ok: #2d6a4f;
+      --warn: #fff3a0;
+      --shadow: 0 2px 12px rgba(26, 26, 26, 0.08);
+      --radius: 14px;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+      background:
+        radial-gradient(ellipse at top left, #ffe8d6 0%, transparent 45%),
+        radial-gradient(ellipse at bottom right, #e8f4ff 0%, transparent 40%),
+        var(--paper);
+      color: var(--ink);
+      line-height: 1.45;
+      padding: 16px 14px calc(120px + var(--safe-bottom));
+    }
+    header { max-width: 560px; margin: 0 auto 18px; }
+    .brand {
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      margin: 0 0 6px;
+    }
+    h1 {
+      font-size: 1.55rem;
+      line-height: 1.2;
+      margin: 0 0 8px;
+      font-weight: 800;
+    }
+    .sub { color: var(--muted); font-size: 0.95rem; margin: 0; }
+    .banner {
+      max-width: 560px;
+      margin: 0 auto 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #fff3a0;
+      border: 1.5px solid #e6c200;
+      font-size: 0.88rem;
+    }
+    .banner strong { display: block; margin-bottom: 4px; }
+    .status {
+      max-width: 560px;
+      margin: 0 auto 14px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      color: var(--ink);
+      font-size: 0.88rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+    }
+    .status strong { color: var(--ok); }
+    form { max-width: 560px; margin: 0 auto; }
+    section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    section h2 { margin: 0 0 4px; font-size: 1.05rem; }
+    section .who { margin: 0 0 14px; font-size: 0.82rem; color: var(--muted); }
+    label { display: block; font-weight: 650; font-size: 0.92rem; margin: 0 0 6px; }
+    .field { margin-bottom: 14px; }
+    .hint {
+      display: block;
+      font-weight: 500;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    input[type="text"],
+    input[type="date"],
+    input[type="url"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      font: inherit;
+      font-size: 16px;
+      padding: 12px 12px;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      appearance: none;
+    }
+    textarea { min-height: 88px; resize: vertical; }
+    input:focus, textarea:focus, select:focus {
+      outline: 2px solid var(--accent);
+      border-color: var(--accent);
+    }
+    .check {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .check:last-child { border-bottom: 0; }
+    .check input {
+      width: 22px;
+      height: 22px;
+      margin-top: 2px;
+      flex-shrink: 0;
+      accent-color: var(--accent);
+    }
+    .check label { margin: 0; font-weight: 550; }
+    .bar {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      padding: 10px 12px calc(10px + var(--safe-bottom));
+      background: rgba(255, 253, 248, 0.94);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--line);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      z-index: 20;
+    }
+    .bar button {
+      flex: 1 1 30%;
+      min-width: 100px;
+      max-width: 180px;
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 10px;
+      font: inherit;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+    .bar .primary { background: var(--accent); color: #fff; }
+    .bar .secondary {
+      background: #fff;
+      color: var(--ink);
+      border: 1.5px solid var(--line);
+    }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(100px + var(--safe-bottom));
+      transform: translateX(-50%) translateY(12px);
+      background: var(--ink);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.25s ease;
+      z-index: 30;
+      max-width: 90vw;
+      text-align: center;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    footer.note {
+      max-width: 560px;
+      margin: 8px auto 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <p class="brand">ColorKrafts for Kids</p>
+    <h1>Business plan fill-in</h1>
+    <p class="sub">For Christian Kennicott &amp; Andrew Metz. Drafts auto-save on this phone and in your continue link.</p>
+  </header>
+
+  <div class="banner" id="safariBanner">
+    <strong>Phone tip</strong>
+    Open in <em>Safari</em> or <em>Chrome</em> (not the tiny browser inside Messages). Then Share → Add to Home Screen / Favorites so closing the tab does not lose your draft.
+  </div>
+
+  <div class="status" id="saveStatus" aria-live="polite">
+    <span>Status: <strong id="saveLabel">Ready</strong></span>
+    <span id="saveTime"></span>
+  </div>
+
+  <form id="planForm" autocomplete="on">
+    <section>
+      <h2>A. Decide first</h2>
+      <p class="who">Blocks launch — mostly Christian, some both</p>
+
+      <div class="field">
+        <label for="domain">1. Exact domain URL <span class="hint">Christian</span></label>
+        <input id="domain" name="domain" type="url" inputmode="url" placeholder="https://…" />
+      </div>
+      <div class="field">
+        <label for="entity">2. Entity type + state <span class="hint">Christian (+ attorney/CPA)</span></label>
+        <input id="entity" name="entity" type="text" placeholder="e.g. LLC in North Carolina" />
+      </div>
+      <div class="field">
+        <label for="launchDate">3. Launch target date <span class="hint">Both</span></label>
+        <input id="launchDate" name="launchDate" type="date" />
+      </div>
+      <div class="field">
+        <label for="podAmazon">4. POD vendor for Amazon <span class="hint">Both — e.g. KDP</span></label>
+        <input id="podAmazon" name="podAmazon" type="text" placeholder="Amazon KDP / other" />
+      </div>
+      <div class="field">
+        <label for="podShopify">5. POD for Shopify <span class="hint">Both</span></label>
+        <input id="podShopify" name="podShopify" type="text" placeholder="Integration or vendor name" />
+      </div>
+    </section>
+
+    <section>
+      <h2>B. Operating agreement</h2>
+      <p class="who">You and Andrew — write this down before money or IP scales</p>
+
+      <div class="field">
+        <label for="roleSplit">6. Day-to-day split <span class="hint">Amazon, Shopify, content, CS, social</span></label>
+        <textarea id="roleSplit" name="roleSplit" placeholder="Christian owns… Andrew owns…"></textarea>
+      </div>
+      <div class="field">
+        <label for="equity">7. Equity / ownership / profit share <span class="hint">If any</span></label>
+        <textarea id="equity" name="equity" placeholder="e.g. Christian 100% for now / split TBD…"></textarea>
+      </div>
+      <div class="field">
+        <label for="andrewPay">8. How Andrew is compensated</label>
+        <textarea id="andrewPay" name="andrewPay" placeholder="Sweat equity, fee, %, later discussion…"></textarea>
+      </div>
+      <div class="field">
+        <label for="decisions">9. Decision rights when you disagree</label>
+        <textarea id="decisions" name="decisions" placeholder="Who has final say on product, money, brand…"></textarea>
+      </div>
+      <div class="field">
+        <label for="artistPay">10. Artist / author payment model</label>
+        <select id="artistPay" name="artistPay">
+          <option value="">Choose…</option>
+          <option>Flat fee per book</option>
+          <option>Royalty per sale</option>
+          <option>Revenue share</option>
+          <option>Mix / other (describe below in notes)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="artistPayNotes">Artist pay notes <span class="hint">Optional</span></label>
+        <textarea id="artistPayNotes" name="artistPayNotes" placeholder="Details…"></textarea>
+      </div>
+    </section>
+
+    <section>
+      <h2>C. Product &amp; money</h2>
+      <p class="who">Fill as you know them — blanks are OK</p>
+
+      <div class="field">
+        <label for="books12">11. Titles + themes for books 1 and 2</label>
+        <textarea id="books12" name="books12" placeholder="Book 1: … Book 2: …"></textarea>
+      </div>
+      <div class="field">
+        <label for="format">12. Format + page count</label>
+        <input id="format" name="format" type="text" placeholder="e.g. 8.5×11, 40 pages one-sided" />
+      </div>
+      <div class="field">
+        <label for="prices">13. Price for early titles <span class="hint">Inside $5.99–$14.99</span></label>
+        <input id="prices" name="prices" type="text" placeholder="Book 1 $x.xx · Book 2 $x.xx" />
+      </div>
+      <div class="field">
+        <label for="tools">14. Design tool stack</label>
+        <input id="tools" name="tools" type="text" placeholder="Canva, Affinity, etc." />
+      </div>
+      <div class="field">
+        <label for="budget">15. Exact $1,000 use-of-funds</label>
+        <textarea id="budget" name="budget" placeholder="Shopify $… · samples $… · tools $… · buffer $…"></textarea>
+      </div>
+      <div class="field">
+        <label for="unitCosts">16. POD print cost + fees</label>
+        <textarea id="unitCosts" name="unitCosts" placeholder="After sample quotes…"></textarea>
+      </div>
+      <div class="field">
+        <label for="comps">17. Competitive research notes</label>
+        <textarea id="comps" name="comps" placeholder="Top Amazon comps, keywords, gaps…"></textarea>
+      </div>
+    </section>
+
+    <section>
+      <h2>D. Setup checklist</h2>
+      <p class="who">Check off when done</p>
+      <div class="check"><input type="checkbox" id="c1" name="c1" /><label for="c1">Entity formed + EIN</label></div>
+      <div class="check"><input type="checkbox" id="c2" name="c2" /><label for="c2">Business bank account</label></div>
+      <div class="check"><input type="checkbox" id="c3" name="c3" /><label for="c3">Amazon + POD accounts</label></div>
+      <div class="check"><input type="checkbox" id="c4" name="c4" /><label for="c4">Shopify store live</label></div>
+      <div class="check"><input type="checkbox" id="c5" name="c5" /><label for="c5">Website live on domain</label></div>
+      <div class="check"><input type="checkbox" id="c6" name="c6" /><label for="c6">Facebook page created</label></div>
+      <div class="check"><input type="checkbox" id="c7" name="c7" /><label for="c7">Instagram account created</label></div>
+      <div class="check"><input type="checkbox" id="c8" name="c8" /><label for="c8">Privacy / returns basics</label></div>
+      <div class="check"><input type="checkbox" id="c9" name="c9" /><label for="c9">Written operating agreement signed</label></div>
+      <div class="check"><input type="checkbox" id="c10" name="c10" /><label for="c10">Plan signed as v1.0 by both</label></div>
+    </section>
+
+    <section>
+      <h2>Signatures</h2>
+      <div class="field">
+        <label for="christianSign">Christian Kennicott — typed name</label>
+        <input id="christianSign" name="christianSign" type="text" placeholder="Type full name to acknowledge" />
+      </div>
+      <div class="field">
+        <label for="christianDate">Christian date</label>
+        <input id="christianDate" name="christianDate" type="date" />
+      </div>
+      <div class="field">
+        <label for="andrewSign">Andrew Metz — typed name</label>
+        <input id="andrewSign" name="andrewSign" type="text" placeholder="Type full name to acknowledge" />
+      </div>
+      <div class="field">
+        <label for="andrewDate">Andrew date</label>
+        <input id="andrewDate" name="andrewDate" type="date" />
+      </div>
+    </section>
+  </form>
+
+  <p class="footer note">Auto-saves to this phone while you type. Tap <strong>Continue link</strong> once and text it to yourself — that link restores everything even on a new phone.</p>
+
+  <div class="bar">
+    <button type="button" class="primary" id="btnContinue">Continue link</button>
+    <button type="button" class="secondary" id="btnShare">Share</button>
+    <button type="button" class="secondary" id="btnDownload">Download</button>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    const KEY = 'colorkrafts-fillin-v2';
+    const DB_NAME = 'colorkrafts-fillin';
+    const STORE = 'drafts';
+    const form = document.getElementById('planForm');
+    const saveLabel = document.getElementById('saveLabel');
+    const saveTime = document.getElementById('saveTime');
+    const toast = document.getElementById('toast');
+    let saveTimer;
+    let urlTimer;
+    let dbPromise;
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+
+    function collect() {
+      const data = {};
+      for (const el of form.elements) {
+        if (!el.name) continue;
+        if (el.type === 'checkbox') data[el.name] = el.checked;
+        else data[el.name] = el.value;
+      }
+      data._savedAt = new Date().toISOString();
+      data._v = 2;
+      return data;
+    }
+
+    function apply(data) {
+      if (!data || typeof data !== 'object') return false;
+      for (const el of form.elements) {
+        if (!el.name || !(el.name in data)) continue;
+        if (el.type === 'checkbox') el.checked = !!data[el.name];
+        else el.value = data[el.name] ?? '';
+      }
+      return true;
+    }
+
+    function openDb() {
+      if (dbPromise) return dbPromise;
+      dbPromise = new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, 1);
+        req.onupgradeneeded = () => {
+          const db = req.result;
+          if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE);
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+      return dbPromise;
+    }
+
+    async function idbSet(data) {
+      try {
+        const db = await openDb();
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE, 'readwrite');
+          tx.objectStore(STORE).put(data, KEY);
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+        });
+      } catch (_) { /* private mode etc. */ }
+    }
+
+    async function idbGet() {
+      try {
+        const db = await openDb();
+        return await new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE, 'readonly');
+          const req = tx.objectStore(STORE).get(KEY);
+          req.onsuccess = () => resolve(req.result || null);
+          req.onerror = () => reject(req.error);
+        });
+      } catch (_) {
+        return null;
+      }
+    }
+
+    function bytesToB64(bytes) {
+      let s = '';
+      const chunk = 0x8000;
+      for (let i = 0; i < bytes.length; i += chunk) {
+        s += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+      }
+      return btoa(s);
+    }
+
+    function b64ToBytes(b64) {
+      const bin = atob(b64);
+      const out = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+      return out;
+    }
+
+    async function encodeState(data) {
+      const json = JSON.stringify(data);
+      try {
+        if (window.CompressionStream) {
+          const stream = new Blob([json]).stream().pipeThrough(new CompressionStream('gzip'));
+          const buf = new Uint8Array(await new Response(stream).arrayBuffer());
+          return 'g' + bytesToB64(buf).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        }
+      } catch (_) { /* fall through */ }
+      return 'r' + btoa(unescape(encodeURIComponent(json))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+
+    async function decodeState(token) {
+      if (!token) return null;
+      const mode = token[0];
+      const body = token.slice(1).replace(/-/g, '+').replace(/_/g, '/');
+      const pad = body + '==='.slice((body.length + 3) % 4);
+      try {
+        if (mode === 'g' && window.DecompressionStream) {
+          const bytes = b64ToBytes(pad);
+          const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+          const json = await new Response(stream).text();
+          return JSON.parse(json);
+        }
+        if (mode === 'r' || mode === 'g') {
+          const json = decodeURIComponent(escape(atob(pad)));
+          return JSON.parse(json);
+        }
+      } catch (_) {
+        return null;
+      }
+      return null;
+    }
+
+    function continueUrl(token) {
+      const u = new URL(location.href);
+      u.search = '';
+      u.hash = 'd=' + token;
+      return u.toString();
+    }
+
+    async function syncUrl(data) {
+      try {
+        const token = await encodeState(data);
+        const next = continueUrl(token);
+        if (next.length < 70000) {
+          history.replaceState(null, '', next);
+          return next;
+        }
+        // Too long for URL — keep phone storage only
+        if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+        return null;
+      } catch (_) {
+        return null;
+      }
+    }
+
+    async function save() {
+      const data = collect();
+      try {
+        localStorage.setItem(KEY, JSON.stringify(data));
+      } catch (_) { /* quota / private */ }
+      await idbSet(data);
+      clearTimeout(urlTimer);
+      urlTimer = setTimeout(() => { syncUrl(data); }, 400);
+      saveLabel.textContent = 'Saved — safe to leave';
+      saveTime.textContent = new Date().toLocaleString();
+      return data;
+    }
+
+    async function load() {
+      let data = null;
+      const hash = location.hash || '';
+      const m = hash.match(/[#&?]d=([^&]+)/);
+      if (m) data = await decodeState(decodeURIComponent(m[1]));
+      if (!data) {
+        const q = new URLSearchParams(location.search).get('d');
+        if (q) data = await decodeState(q);
+      }
+      if (!data) data = await idbGet();
+      if (!data) {
+        try {
+          const raw = localStorage.getItem(KEY);
+          if (raw) data = JSON.parse(raw);
+        } catch (_) { /* ignore */ }
+      }
+      if (data && apply(data)) {
+        saveLabel.textContent = 'Restored your draft';
+        if (data._savedAt) saveTime.textContent = new Date(data._savedAt).toLocaleString();
+        await save();
+      }
+    }
+
+    function checklistLine(id, label) {
+      const on = form.elements[id]?.checked;
+      return `- [${on ? 'x' : ' '}] ${label}`;
+    }
+
+    function toMarkdown(data) {
+      const lines = [
+        '# ColorKrafts for Kids — Fill-In Answers',
+        '',
+        `Saved: ${data._savedAt || new Date().toISOString()}`,
+        '',
+        '## A. Decide first',
+        `1. Domain: ${data.domain || ''}`,
+        `2. Entity + state: ${data.entity || ''}`,
+        `3. Launch date: ${data.launchDate || ''}`,
+        `4. POD Amazon: ${data.podAmazon || ''}`,
+        `5. POD Shopify: ${data.podShopify || ''}`,
+        '',
+        '## B. Operating agreement',
+        `6. Role split:\n${data.roleSplit || ''}`,
+        '',
+        `7. Equity:\n${data.equity || ''}`,
+        '',
+        `8. Andrew compensation:\n${data.andrewPay || ''}`,
+        '',
+        `9. Decision rights:\n${data.decisions || ''}`,
+        '',
+        `10. Artist pay: ${data.artistPay || ''}`,
+        data.artistPayNotes ? `Notes: ${data.artistPayNotes}` : '',
+        '',
+        '## C. Product & money',
+        `11. Books 1–2:\n${data.books12 || ''}`,
+        '',
+        `12. Format: ${data.format || ''}`,
+        `13. Prices: ${data.prices || ''}`,
+        `14. Tools: ${data.tools || ''}`,
+        `15. Budget:\n${data.budget || ''}`,
+        '',
+        `16. Unit costs:\n${data.unitCosts || ''}`,
+        '',
+        `17. Comps:\n${data.comps || ''}`,
+        '',
+        '## D. Setup checklist',
+        checklistLine('c1', 'Entity formed + EIN'),
+        checklistLine('c2', 'Business bank account'),
+        checklistLine('c3', 'Amazon + POD accounts'),
+        checklistLine('c4', 'Shopify store live'),
+        checklistLine('c5', 'Website live on domain'),
+        checklistLine('c6', 'Facebook page created'),
+        checklistLine('c7', 'Instagram account created'),
+        checklistLine('c8', 'Privacy / returns basics'),
+        checklistLine('c9', 'Written operating agreement signed'),
+        checklistLine('c10', 'Plan signed as v1.0 by both'),
+        '',
+        '## Signatures',
+        `Christian: ${data.christianSign || ''} — ${data.christianDate || ''}`,
+        `Andrew: ${data.andrewSign || ''} — ${data.andrewDate || ''}`,
+        '',
+      ];
+      return lines.filter((l, i, a) => !(l === '' && a[i - 1] === '')).join('\n');
+    }
+
+    async function download() {
+      const data = await save();
+      const md = toMarkdown(data);
+      const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+      const name = `ColorKrafts-Fill-In-${new Date().toISOString().slice(0, 10)}.md`;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showToast('Downloaded — check Files / Downloads');
+    }
+
+    async function share() {
+      const data = await save();
+      const md = toMarkdown(data);
+      const name = `ColorKrafts-Fill-In-${new Date().toISOString().slice(0, 10)}.md`;
+      const file = new File([md], name, { type: 'text/markdown' });
+      try {
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: 'ColorKrafts for Kids fill-in',
+            text: 'Filled business plan answers',
+          });
+          showToast('Shared');
+          return;
+        }
+        if (navigator.share) {
+          await navigator.share({ title: 'ColorKrafts fill-in', text: md });
+          showToast('Shared');
+          return;
+        }
+      } catch (e) {
+        if (e && e.name === 'AbortError') return;
+      }
+      try {
+        await navigator.clipboard.writeText(md);
+        showToast('Copied answers to clipboard');
+      } catch {
+        download();
+      }
+    }
+
+    async function continueLink() {
+      const data = await save();
+      const token = await encodeState(data);
+      const url = continueUrl(token);
+      if (url.length >= 70000) {
+        showToast('Answers too long for a link — use Share/Download');
+        return;
+      }
+      history.replaceState(null, '', url);
+      try {
+        if (navigator.share) {
+          await navigator.share({
+            title: 'ColorKrafts continue later',
+            text: 'My business-plan fill-in draft — open this to restore everything:',
+            url,
+          });
+          showToast('Continue link shared');
+          return;
+        }
+      } catch (e) {
+        if (e && e.name === 'AbortError') return;
+      }
+      try {
+        await navigator.clipboard.writeText(url);
+        showToast('Continue link copied — text it to yourself');
+      } catch {
+        prompt('Copy this continue link:', url);
+      }
+    }
+
+    form.addEventListener('input', () => {
+      saveLabel.textContent = 'Saving…';
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => { save(); }, 200);
+    });
+    form.addEventListener('change', () => { save(); });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') save();
+    });
+    window.addEventListener('pagehide', () => { save(); });
+    window.addEventListener('beforeunload', () => { save(); });
+
+    document.getElementById('btnDownload').addEventListener('click', download);
+    document.getElementById('btnShare').addEventListener('click', share);
+    document.getElementById('btnContinue').addEventListener('click', continueLink);
+
+    load();
+  </script>
+</body>
+</html>
